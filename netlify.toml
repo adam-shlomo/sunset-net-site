@@ -1,0 +1,14 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# So that / serves the main page (optional: rename sunset-net-cursor.html to index.html instead)
+[[redirects]]
+  from = "/"
+  to = "/sunset-net-cursor.html"
+  status = 200
+
+[[redirects]]
+  from = "/index.html"
+  to = "/sunset-net-cursor.html"
+  status = 200
