@@ -1,11 +1,12 @@
 # Deploy to Cloudflare Pages on push to main (or run manually from Actions tab).
-# Requires GitHub Secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+# Required GitHub Secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_PAGES_PROJECT_NAME
+# CLOUDFLARE_PAGES_PROJECT_NAME = exact name of your Pages project (Cloudflare Dashboard → Workers & Pages)
 name: Deploy to Cloudflare Pages
 
 on:
   push:
     branches: [main]
-  workflow_dispatch:  # Run manually from Actions → Deploy to Cloudflare Pages → Run workflow
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -23,7 +24,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=sunset-net-site
+          command: pages deploy . --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT_NAME }}
 
       - name: Deployment URL
         if: success()
