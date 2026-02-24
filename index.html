@@ -1026,7 +1026,7 @@ function handleSubmit() {
       var data = _ref.data;
 
       if (status >= 200 && status < 300) {
-        window.location.href = '/thank-you.html';
+        window.location.href = '/thank-you';
         return;
       }
       errorEl.textContent = (data && data.error) || 'Something went wrong. Please try again.';
