@@ -1,6 +1,6 @@
 /**
  * Netlify serverless function: signup
- * POST body: { email, primary_stack?, priority_lab?: boolean }
+ * POST body: { email, name?, terms_accepted?: boolean }
  * - Validates email, inserts into Supabase signups table
  * - Sends confirmation email via Resend
  * Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, CONFIRMATION_FROM_EMAIL, SITE_URL
@@ -68,8 +68,7 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const primary_stack = sanitize(body.primary_stack, 100);
-  const priority_lab = Boolean(body.priority_lab);
+  const name = sanitize(body.name, 100);
   const terms_accepted = Boolean(body.terms_accepted);
   if (!terms_accepted) {
     return {
@@ -91,8 +90,7 @@ exports.handler = async (event, context) => {
   // Insert into Supabase
   const row = {
     email: email.toLowerCase(),
-    primary_stack: primary_stack || null,
-    priority_lab,
+    name: name || null,
     terms_accepted_at: new Date().toISOString(),
   };
 
@@ -113,7 +111,7 @@ exports.handler = async (event, context) => {
       return {
         statusCode: 409,
         headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'This email is already on the list' }),
+        body: JSON.stringify({ error: 'This email already has an account' }),
       };
     }
     console.error('Supabase error', supabaseRes.status, errText);
@@ -127,8 +125,8 @@ exports.handler = async (event, context) => {
   // Send confirmation email (best-effort; don't fail the request if Resend fails)
   if (RESEND_API_KEY) {
     const html = `
-      <p>You're on the list.</p>
-      <p>We'll send access details and the download link when your slot is ready. In the meantime — keep building.</p>
+      <p>Welcome to Sunset Net.</p>
+      <p>Your free trial is ready. Log in to get started.</p>
       <p>— Sunset Net</p>
     `;
     try {
@@ -141,7 +139,7 @@ exports.handler = async (event, context) => {
         body: JSON.stringify({
           from: CONFIRMATION_FROM_EMAIL,
           to: [email],
-          subject: "You're on the Sunset Net alpha list",
+          subject: 'Welcome to Sunset Net',
           html: html.trim(),
         }),
       });
@@ -157,6 +155,6 @@ exports.handler = async (event, context) => {
   return {
     statusCode: 201,
     headers: { ...corsHeaders(origin), 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ok: true, message: "You're on the list." }),
+    body: JSON.stringify({ ok: true, message: 'Account created.' }),
   };
 };

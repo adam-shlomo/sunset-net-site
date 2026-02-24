@@ -733,37 +733,6 @@ h2 em { font-style: italic; color: var(--accent); }
 .submit-btn.loading .btn-loading { display: inline; }
 .submit-btn.loading { cursor: wait; }
 
-/* ─── SUCCESS ─── */
-.success {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  padding: 40px;
-  border: 1px solid rgba(26,138,60,0.2);
-  border-radius: 10px;
-  background: rgba(26,138,60,0.04);
-  text-align: center;
-}
-
-.success.show { display: flex; }
-
-.success-icon { font-size: 1.8rem; }
-
-.success-title {
-  font-family: var(--serif);
-  font-size: 1.5rem;
-  color: var(--ink);
-  letter-spacing: -0.02em;
-}
-
-.success-sub {
-  font-size: 0.85rem;
-  color: var(--muted);
-  line-height: 1.7;
-  font-weight: 300;
-}
-
 /* ─── FOOTER ─── */
 footer {
   border-top: 1px solid var(--border);
@@ -943,9 +912,9 @@ footer {
 
 <!-- FORM SECTION -->
 <div class="form-section" id="access">
-  <div class="section-kicker">Early Access</div>
-  <h2>Join the alpha.</h2>
-  <p class="section-body">Network engineers and lab enthusiasts first. We'll reach out when your slot is ready.</p>
+  <div class="section-kicker">Get Started</div>
+  <h2>Start your free trial.</h2>
+  <p class="section-body">Try Sunset Net free for 30 days. No credit card required.</p>
 
   <div class="form" id="signup-form">
 
@@ -957,48 +926,26 @@ footer {
     </div>
 
     <div>
-      <label class="field-label" for="signup-stack">Primary stack</label>
-      <div class="select-wrap">
-        <select class="field-select" id="signup-stack" name="primary_stack">
-          <option value="" disabled selected>Select your primary stack</option>
-          <option value="Cisco IOS / IOS-XE">Cisco IOS / IOS-XE</option>
-          <option value="Cisco IOS-XR">Cisco IOS-XR</option>
-          <option value="Juniper JunOS">Juniper JunOS</option>
-          <option value="Nokia SR-OS">Nokia SR-OS</option>
-          <option value="Ribbon / EMS">Ribbon / EMS</option>
-          <option value="Multi-vendor">Multi-vendor</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+      <label class="field-label" for="signup-name">Full name <span class="req">*</span></label>
+      <input class="field-input" id="signup-name" name="name" type="text" placeholder="Your full name" required autocomplete="name" />
     </div>
-
-    <label class="check-row">
-      <input type="checkbox" name="priority_lab" id="signup-priority-lab" value="true" />
-      <span class="check-txt"><strong>Priority access:</strong> I use GNS3 or EVE-NG for labbing</span>
-    </label>
 
     <label class="check-row required-row">
       <input type="checkbox" id="terms-check" onchange="checkTerms()" />
       <span class="check-txt">
         <strong>Required:</strong> I accept the
-        <a href="safety-terms.html" target="_blank" rel="noopener">Safety Terms &amp; Liability Policy</a>
-        — including the Human-in-the-Loop mandate, LLM hallucination disclaimer, and limitation of liability.
+        <a href="safety-terms.html" target="_blank" rel="noopener">Safety Terms &amp; Liability Policy</a>.
       </span>
     </label>
 
     <button class="submit-btn" id="submit-btn" type="button" onclick="handleSubmit()" disabled>
-      <span class="btn-text">Request Access <span class="arr">→</span></span>
-      <span class="btn-loading" id="btn-loading" aria-hidden="true">Sending…</span>
+      <span class="btn-text">Start Free Trial <span class="arr">→</span></span>
+      <span class="btn-loading" id="btn-loading" aria-hidden="true">Creating account…</span>
     </button>
 
-    <div class="form-note">No spam. No sales calls. Engineers only.</div>
+    <div class="form-note">No credit card required. Cancel anytime.</div>
   </div>
 
-  <div class="success" id="form-success">
-    <div class="success-icon">✦</div>
-    <div class="success-title">You're on the list.</div>
-    <div class="success-sub">Check your inbox for a confirmation. We'll send access and the download link when your slot is ready.<br>In the meantime — keep building.</div>
-  </div>
 </div>
 
 <!-- FOOTER -->
@@ -1039,8 +986,6 @@ function handleSubmit() {
   var termsCheck = document.getElementById('terms-check');
   if (!termsCheck || !termsCheck.checked) return;
 
-  var form = document.getElementById('signup-form');
-  var successEl = document.getElementById('form-success');
   var errorEl = document.getElementById('form-error');
   var btn = document.getElementById('submit-btn');
 
@@ -1051,8 +996,7 @@ function handleSubmit() {
 
   var payload = {
     email: (document.getElementById('signup-email') || {}).value.trim(),
-    primary_stack: (document.getElementById('signup-stack') || {}).value || null,
-    priority_lab: (document.getElementById('signup-priority-lab') || {}).checked,
+    name: (document.getElementById('signup-name') || {}).value.trim(),
     terms_accepted: true
   };
 
@@ -1071,8 +1015,7 @@ function handleSubmit() {
       var data = _ref.data;
 
       if (status >= 200 && status < 300) {
-        form.style.display = 'none';
-        successEl.classList.add('show');
+        window.location.href = '/thank-you';
         return;
       }
       errorEl.textContent = (data && data.error) || 'Something went wrong. Please try again.';
@@ -1087,6 +1030,9 @@ function handleSubmit() {
       btn.disabled = false;
     });
 }
+
+// ─── Page view tracking (no cookies, no PII) ───
+(function(){try{fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:location.pathname,referrer:document.referrer||null}),keepalive:true});}catch(_){}})();
 </script>
 
 </body>

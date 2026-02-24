@@ -1,0 +1,4 @@
+# Cloudflare Pages — project name used by: npx wrangler pages deploy .
+# If your Pages project has a different name in the dashboard, change it here.
+name = "sunset-net-site"
+pages_build_output_dir = "."

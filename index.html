@@ -1,14 +1,1039 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0;url=sunset-net-cursor.html">
-  <title>Sunset Net — AI Network Orchestration</title>
-  <link rel="canonical" href="sunset-net-cursor.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunset Net — AI Network Orchestration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+
+/* ─── RESET & VARS ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --white:   #FAFAF8;
+  --paper:   #F5F3EE;
+  --ink:     #18181A;
+  --ink2:    #3A3A3C;
+  --muted:   #8A8A8E;
+  --border:  rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.13);
+  --accent:  #E8500A;         /* warm Sunset orange, slightly more refined */
+  --green:   #1A8A3C;         /* muted green for terminal */
+  --green-b: #00C84A;         /* bright green for cursor blink */
+
+  --serif:  'DM Serif Display', Georgia, serif;
+  --sans:   'DM Sans', system-ui, sans-serif;
+  --mono:   'IBM Plex Mono', monospace;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+  --shadow-lg:  0 20px 60px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.06);
+  --shadow-xl:  0 40px 100px rgba(0,0,0,0.12), 0 16px 40px rgba(0,0,0,0.07);
+}
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Grain texture overlay — Cursor's signature subtle noise */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  background: rgba(250,250,248,0.88);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.logo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.nav-center {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-center a {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+}
+
+.nav-center a:hover { color: var(--ink); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-link {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+}
+
+.nav-link:hover { color: var(--ink); }
+
+.nav-btn {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 7px 18px;
+  background: var(--ink);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.nav-btn:hover {
+  background: var(--ink2);
+  transform: translateY(-1px);
+}
+
+/* ─── HERO ─── */
+.hero {
+  padding: 60px 24px 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle radial wash behind the headline — like Cursor's very gentle glow */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 80px; left: 50%;
+  transform: translateX(-50%);
+  width: 800px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(232,80,10,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px 4px 8px;
+  border-radius: 20px;
+  background: var(--paper);
+  border: 1px solid var(--border2);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  margin-bottom: 32px;
+  animation: rise 0.6s ease both;
+}
+
+.badge-pip {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  max-width: 720px;
+  margin: 0 auto 32px;
+  animation: rise 0.6s ease 0.08s both;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--muted);
+  max-width: 420px;
+  margin: 0 auto 40px;
+  line-height: 1.75;
+  animation: rise 0.6s ease 0.16s both;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 72px;
+  animation: rise 0.6s ease 0.22s both;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: all 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.btn-primary:hover {
+  background: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.10);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  background: transparent;
+  color: var(--ink2);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 400;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: all 0.15s;
+}
+
+.btn-ghost:hover {
+  background: var(--paper);
+  border-color: rgba(0,0,0,0.18);
+}
+
+/* ─── PRODUCT SCREENSHOT / TERMINAL ─── */
+.product-frame {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: rise 0.7s ease 0.3s both;
+}
+
+/* Cursor-style: large soft shadow + slight bottom crop to feel like it extends */
+.product-frame::before {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 80px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.12) 0%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+.terminal-shell {
+  background: #13141A;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(0,0,0,0.12);
+  text-align: left;
+}
+
+/* Mac-style window bar */
+.t-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 12px 16px;
+  background: #1C1D24;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+
+.t-dots { display: flex; gap: 6px; }
+.t-dot  { width: 11px; height: 11px; border-radius: 50%; }
+.td-r   { background: #FF5F56; }
+.td-y   { background: #FFBD2E; }
+.td-g   { background: #27C93F; }
+
+.t-bar-title {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.03em;
+}
+
+.t-bar-right {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: #1A8A3C;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.t-bar-right::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #00C84A;
+  box-shadow: 0 0 5px #00C84A;
+  animation: blink-slow 2s ease-in-out infinite;
+}
+
+@keyframes blink-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Terminal content */
+.t-content {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  min-height: 340px;
+}
+
+.t-main {
+  padding: 22px 26px 26px;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.9;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.tl { display: flex; gap: 9px; align-items: flex-start; }
+.tp { color: #00C84A; flex-shrink: 0; margin-top: 1px; }
+.tc { color: #C8CDD8; }
+.ti { color: #4A5070; }
+.ts { color: #00C84A; }
+.to { color: #E8833A; }
+.tg { height: 8px; }
+
+.t-config-block {
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-left: 2px solid rgba(0,200,74,0.35);
+  background: rgba(0,200,74,0.04);
+}
+
+.t-approval-box {
+  margin-top: 14px;
+  padding: 13px 14px;
+  border: 1px solid rgba(232,131,58,0.25);
+  border-radius: 6px;
+  background: rgba(232,131,58,0.06);
+}
+
+.t-approval-label {
+  font-size: 0.65rem;
+  color: #E8833A;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.t-btn-row { display: flex; gap: 8px; }
+.t-btn {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 5px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.t-btn-a {
+  background: rgba(0,200,74,0.15);
+  color: #00C84A;
+  border: 1px solid rgba(0,200,74,0.3);
+}
+
+.t-btn-d {
+  background: rgba(255,95,86,0.1);
+  color: #FF7B72;
+  border: 1px solid rgba(255,95,86,0.25);
+}
+
+.t-cursor-blink {
+  display: inline-block;
+  width: 7px; height: 13px;
+  background: #00C84A;
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+
+/* Sidebar panel */
+.t-sidebar {
+  padding: 18px 18px;
+  background: #18191F;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.t-sidebar-title {
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.sidebar-item {
+  padding: 8px 10px;
+  border-radius: 5px;
+  transition: background 0.15s;
+}
+
+.sidebar-item:hover { background: rgba(255,255,255,0.04); }
+.sidebar-item.active { background: rgba(255,255,255,0.06); }
+
+.si-label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.01em;
+  margin-bottom: 2px;
+}
+
+.sidebar-item.active .si-label { color: rgba(255,255,255,0.9); }
+
+.si-meta {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.03em;
+}
+
+.si-status-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.si-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.si-dot.running { background: #00C84A; box-shadow: 0 0 4px #00C84A; animation: blink-slow 1.5s infinite; }
+.si-dot.pending { background: #FFBD2E; }
+.si-dot.done    { background: rgba(255,255,255,0.2); }
+
+.si-status {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sidebar-item.active .si-status { color: rgba(255,255,255,0.5); }
+
+/* Typewriter animation classes */
+.typed { overflow: hidden; white-space: nowrap; }
+.t1  { animation: type 0.5s steps(32) 1.0s both; }
+.t2  { animation: fi 0.3s ease 1.8s both; }
+.t3  { animation: fi 0.3s ease 2.2s both; }
+.t4  { animation: fi 0.3s ease 2.6s both; }
+.t5  { animation: type 0.7s steps(52) 3.0s both; }
+.t6  { animation: fi 0.3s ease 3.9s both; }
+.t7  { animation: fi 0.3s ease 4.7s both; }
+.t8  { animation: fi 0.4s ease 5.2s both; }
+.t9  { animation: fi 0.3s ease 5.6s both; }
+
+@keyframes type { from { max-width:0; } to { max-width:100%; } }
+@keyframes fi   { from { opacity:0; } to { opacity:1; } }
+@keyframes rise {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+
+/* ─── SECTION SHARED ─── */
+.section {
+  padding: 100px 24px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.section-center { text-align: center; }
+
+.section-kicker {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+
+h2 em { font-style: italic; color: var(--accent); }
+
+.section-body {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ─── DIVIDER ─── */
+.rule {
+  max-width: 900px;
+  margin: 0 auto;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ─── FORM SECTION ─── */
+.form-section {
+  padding: 100px 24px 140px;
+  max-width: 520px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.form-section h2 { margin-bottom: 10px; }
+.form-section .section-body { margin-bottom: 40px; }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--ink2);
+  margin-bottom: 5px;
+  letter-spacing: 0.01em;
+}
+
+.field-label .req { color: var(--accent); }
+
+.field-input,
+.field-select {
+  width: 100%;
+  background: var(--white);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.field-input::placeholder { color: var(--muted); opacity: 0.7; }
+
+.field-input:focus,
+.field-select:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(24,24,26,0.07);
+}
+
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '↓';
+  position: absolute;
+  right: 13px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.72rem;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.field-select { cursor: pointer; }
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 14px;
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  box-shadow: var(--shadow-sm);
+}
+
+.check-row:hover {
+  border-color: rgba(0,0,0,0.18);
+  background: var(--paper);
+}
+
+.check-row input {
+  width: 14px; height: 14px;
+  flex-shrink: 0;
+  margin-top: 3px;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.check-txt {
+  font-size: 0.82rem;
+  color: var(--ink2);
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+.check-txt strong { font-weight: 500; color: var(--ink); }
+
+.check-txt a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.check-row.required-row { border-color: rgba(232,80,10,0.2); }
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.10);
+  margin-top: 4px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2), 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.submit-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.arr { font-size: 0.9rem; transition: transform 0.15s; }
+.submit-btn:hover:not(:disabled) .arr { transform: translateX(3px); }
+
+.form-note {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.form-error {
+  display: none;
+  padding: 10px 14px;
+  border-radius: 7px;
+  background: rgba(255,95,86,0.08);
+  border: 1px solid rgba(255,95,86,0.25);
+  font-size: 0.82rem;
+  color: #c94208;
+  margin-bottom: 4px;
+}
+
+.form-error.show { display: block; }
+
+.submit-btn .btn-loading { display: none; }
+.submit-btn.loading .btn-text { display: none; }
+.submit-btn.loading .btn-loading { display: inline; }
+.submit-btn.loading { cursor: wait; }
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-brand {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-copy {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-links a:hover { color: var(--ink); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 780px) {
+  nav { padding: 0 20px; }
+  .nav-center { display: none; }
+  .t-content { grid-template-columns: 1fr; }
+  .t-sidebar { display: none; }
+  footer { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+</style>
 </head>
 <body>
-  <p>Redirecting to <a href="sunset-net-cursor.html">Sunset Net</a>…</p>
-  <script>location.replace("sunset-net-cursor.html");</script>
+
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Logo wordmark -->
+  <div style="margin-bottom:20px;animation:rise 0.6s ease both;">
+    <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(3.6rem,9vw,6.8rem);letter-spacing:-0.03em;line-height:1;background:linear-gradient(135deg,#FF8040 0%,#F76218 45%,#C94208 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:inline-block;">Sunset Net</span>
+  </div>
+
+  <h1>The <em>AI orchestrator</em><br>for network engineers.</h1>
+
+  <!-- Product Frame -->
+  <div class="product-frame">
+    <div class="terminal-shell">
+
+      <!-- Window bar -->
+      <div class="t-bar">
+        <div class="t-dots">
+          <div class="t-dot td-r"></div>
+          <div class="t-dot td-y"></div>
+          <div class="t-dot td-g"></div>
+        </div>
+        <div class="t-bar-title">sunset-net — core-router-01</div>
+        <div class="t-bar-right">SSH CONNECTED</div>
+      </div>
+
+      <!-- Main content + sidebar -->
+      <div class="t-content">
+
+        <!-- Terminal pane -->
+        <div class="t-main">
+          <div class="tl t1 typed"><span class="tp">$</span><span class="tc">netmind --connect core-router-01</span></div>
+          <div class="tl t2"><span class="ti">Establishing secure session...</span></div>
+          <div class="tl t3"><span class="ts">✓ Connected via SSH</span></div>
+          <div class="tg t4"></div>
+          <div class="tl t5 typed"><span class="tp">$</span><span class="tc">sunset-net <span class="to">"configure OSPF area 0 on all lab devices"</span></span></div>
+          <div class="tl t6"><span class="ti">&nbsp;&nbsp;Parsing intent · Analyzing topology · Generating config...</span></div>
+          <div class="t-config-block t7">
+            <div class="tl"><span class="ts">GENERATED CONFIGURATION</span></div>
+            <div class="tg" style="height:5px"></div>
+            <div class="tl"><span class="tc">router ospf 1</span></div>
+            <div class="tl"><span class="tc">&nbsp;router-id 10.0.0.1</span></div>
+            <div class="tl"><span class="tc">&nbsp;network 10.0.0.0 0.255.255.255 area 0</span></div>
+            <div class="tl"><span class="tc">&nbsp;passive-interface default</span></div>
+            <div class="tl"><span class="tc">&nbsp;no passive-interface GigabitEthernet0/1</span></div>
+          </div>
+          <div class="t-approval-box t8">
+            <div class="t-approval-label">⚠ APPROVAL REQUIRED — Apply to 4 devices?</div>
+            <div class="tl"><span class="ti">Rollback snapshot: <span class="tc">snap_20260219_114302</span></span></div>
+            <div class="t-btn-row" style="margin-top:10px;">
+              <button class="t-btn t-btn-a">✓ Approve</button>
+              <button class="t-btn t-btn-d">✕ Deny</button>
+            </div>
+          </div>
+          <div class="tg t9" style="height:12px;"></div>
+          <div class="tl t9"><span class="tp">$</span><span class="t-cursor-blink"></span></div>
+        </div>
+
+        <!-- Sidebar panel -->
+        <div class="t-sidebar">
+          <div class="t-sidebar-title">Sessions</div>
+
+          <div class="sidebar-item active">
+            <div class="si-label">core-router-01</div>
+            <div class="si-status-row">
+              <div class="si-dot running"></div>
+              <div class="si-status">Running · OSPF</div>
+            </div>
+          </div>
+
+          <div class="sidebar-item">
+            <div class="si-label">edge-sw-02</div>
+            <div class="si-status-row">
+              <div class="si-dot pending"></div>
+              <div class="si-status">Pending approval</div>
+            </div>
+          </div>
+
+          <div class="sidebar-item">
+            <div class="si-label">dist-router-01</div>
+            <div class="si-status-row">
+              <div class="si-dot done"></div>
+              <div class="si-status">Completed · BGP</div>
+            </div>
+          </div>
+
+          <div class="sidebar-item">
+            <div class="si-label">core-sw-03</div>
+            <div class="si-status-row">
+              <div class="si-dot done"></div>
+              <div class="si-status">Completed · VLAN</div>
+            </div>
+          </div>
+
+          <div style="margin-top:auto; padding-top:16px; border-top:1px solid rgba(255,255,255,0.05);">
+            <div style="font-family:var(--mono);font-size:0.6rem;color:rgba(255,255,255,0.18);letter-spacing:0.06em;line-height:1.6;">
+              SafetyGuard active<br>
+              Audit log: 4 entries<br>
+              Snapshots: 4 saved
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPACER after hero screenshot -->
+<div style="height:100px;"></div>
+
+<hr class="rule">
+
+<!-- COPY SECTION -->
+<div class="section section-center">
+  <div class="section-kicker">How it works</div>
+  <h2>Plain English in.<br><em>Production config</em> out.</h2>
+  <p class="section-body">
+    Tell Sunset Net what you want your network to do. It generates vendor-specific configuration, cross-checks your topology for conflicts, and surfaces a diff for your review — before a single packet changes.
+  </p>
+</div>
+
+<hr class="rule">
+
+<!-- FORM SECTION -->
+<div class="form-section" id="access">
+  <div class="section-kicker">Get Started</div>
+  <h2>Start your free trial.</h2>
+  <p class="section-body">Try Sunset Net free for 30 days. No credit card required.</p>
+
+  <div class="form" id="signup-form">
+
+    <div class="form-error" id="form-error" role="alert" aria-live="polite"></div>
+
+    <div>
+      <label class="field-label" for="signup-email">Work email <span class="req">*</span></label>
+      <input class="field-input" id="signup-email" name="email" type="email" placeholder="you@company.com" required autocomplete="email" />
+    </div>
+
+    <div>
+      <label class="field-label" for="signup-name">Full name <span class="req">*</span></label>
+      <input class="field-input" id="signup-name" name="name" type="text" placeholder="Your full name" required autocomplete="name" />
+    </div>
+
+    <label class="check-row required-row">
+      <input type="checkbox" id="terms-check" onchange="checkTerms()" />
+      <span class="check-txt">
+        <strong>Required:</strong> I accept the
+        <a href="safety-terms.html" target="_blank" rel="noopener">Safety Terms &amp; Liability Policy</a>.
+      </span>
+    </label>
+
+    <button class="submit-btn" id="submit-btn" type="button" onclick="handleSubmit()" disabled>
+      <span class="btn-text">Start Free Trial <span class="arr">→</span></span>
+      <span class="btn-loading" id="btn-loading" aria-hidden="true">Creating account…</span>
+    </button>
+
+    <div class="form-note">No credit card required. Cancel anytime.</div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="footer-brand">
+      <div class="logo-dot"></div>
+      Sunset Net
+    </div>
+    <span class="footer-copy">© 2026</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="safety-terms.html" target="_blank" rel="noopener">Safety Terms</a></li>
+    <li><a href="#">Documentation</a></li>
+    <li><a href="#">GitHub</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+function checkTerms() {
+  var checked = document.getElementById('terms-check').checked;
+  document.getElementById('submit-btn').disabled = !checked;
+}
+
+function getSignupApiUrl() {
+  var base = window.location.origin;
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return base + '/.netlify/functions/signup';
+  }
+  if (window.location.hostname.endsWith('.netlify.app')) {
+    return base + '/.netlify/functions/signup';
+  }
+  return base + '/api/signup';
+}
+
+function handleSubmit() {
+  var termsCheck = document.getElementById('terms-check');
+  if (!termsCheck || !termsCheck.checked) return;
+
+  var errorEl = document.getElementById('form-error');
+  var btn = document.getElementById('submit-btn');
+
+  errorEl.classList.remove('show');
+  errorEl.textContent = '';
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  var payload = {
+    email: (document.getElementById('signup-email') || {}).value.trim(),
+    name: (document.getElementById('signup-name') || {}).value.trim(),
+    terms_accepted: true
+  };
+
+  fetch(getSignupApiUrl(), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(function (res) {
+      return res.json().then(function (data) {
+        return { status: res.status, data: data };
+      });
+    })
+    .then(function (_ref) {
+      var status = _ref.status;
+      var data = _ref.data;
+
+      if (status >= 200 && status < 300) {
+        window.location.href = '/thank-you';
+        return;
+      }
+      errorEl.textContent = (data && data.error) || 'Something went wrong. Please try again.';
+      errorEl.classList.add('show');
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    })
+    .catch(function () {
+      errorEl.textContent = 'Network error. Check your connection and try again.';
+      errorEl.classList.add('show');
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    });
+}
+
+// ─── Page view tracking (no cookies, no PII) ───
+(function(){try{fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:location.pathname,referrer:document.referrer||null}),keepalive:true});}catch(_){}})();
+</script>
+
 </body>
 </html>

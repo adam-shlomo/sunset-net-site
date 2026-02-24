@@ -41,7 +41,21 @@ Best if you’re not using Git or want a one-off deploy.
 
 ---
 
-## Option B: Deploy with Git (recommended if you use GitHub/GitLab)
+## Option B: Deploy with Git + GitHub Action (recommended)
+
+If Cloudflare’s built-in deploy step fails with auth (e.g. error 10000), use the **GitHub Action** in this repo so each push to `main` deploys via Wrangler using a token stored in GitHub.
+
+1. **Add GitHub Secrets** (repo → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**):
+   - `CLOUDFLARE_API_TOKEN` — API token with **Account → Cloudflare Pages → Edit**
+   - `CLOUDFLARE_ACCOUNT_ID` — your account ID (e.g. `616291b90aac151bcc9ab892b58a951c`)
+
+2. **Push to `main`** (or merge a PR into `main`). The workflow `.github/workflows/deploy-pages.yml` runs and deploys the repo to your Pages project `sunset-net-site`.
+
+3. **Optional:** In Cloudflare Pages → **Settings** → **Build configuration**, set **Deploy command** to empty or `true` so the Cloudflare build doesn’t run Wrangler (the Action does the deploy instead).
+
+---
+
+## Option C: Deploy with Git (Cloudflare build only)
 
 Best if you want automatic deploys on every push and the signup **Pages Function** to work.
 
@@ -97,9 +111,14 @@ Same as Option A: **Custom domains** → **Set up a custom domain** → add your
 
 | Issue | What to do |
 |-------|------------|
+| **“Missing entry-point to Worker script” / build runs `wrangler deploy`** | The project is using the wrong build command. In **Cloudflare Dashboard** → your Pages project → **Settings** → **Builds & deployments** → **Build configuration**: set **Build command** to `exit 0`. Set **Path** (build output directory) to `.`. Leave **Deploy command** empty if possible; if it’s required, use `npx wrangler pages deploy .` (see “Only see Hello World” below). Save and **Retry deployment**. |
+| **Only see “Hello World” instead of my site** | Cloudflare is serving the default placeholder because no static files were uploaded. In **Settings** → **Builds & deployments** → **Build configuration**: set **Build command** to `exit 0`, **Path** to `.`, and **Deploy command** to `npx wrangler pages deploy . --project-name=sunset-net-site` (use your actual Pages project name if different). Save and **Retry deployment**. |
+| **“Must specify a project name”** when deploy runs | The deploy command must include the project name. In **Settings** → **Builds & deployments** → **Build configuration**, set **Deploy command** to: `npx wrangler pages deploy . --project-name=sunset-net-site` (replace `sunset-net-site` with your exact project name from Workers & Pages). Save and **Retry deployment**. |
+| **“Project not found” (8000007) even though the project exists in the dashboard** | Your project was likely created with **Connect to Git**. The deploy API only targets **Direct Upload** projects. Create a **new** Pages project via **Workers & Pages** → **Create application** → **Pages** → **Upload assets** (not “Connect to Git”). Name it e.g. `sunset-net-site` or `sunset-net-live`. Set the secret **CLOUDFLARE_PAGES_PROJECT_NAME** to that new project’s name. The Action will deploy there. You can then point your domain to that project or make it the primary. |
+| **“Authentication error [code: 10000]”** on deploy | The API token needs **Pages Write** and the build needs the account ID. (1) Create a **new** API token at [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens): **Create Custom Token** → add **Account** → **Cloudflare Pages** → **Edit**; restrict to your account. Copy the token. (2) In the Pages project → **Settings** → **Environment variables** (Production): set `CLOUDFLARE_API_TOKEN` to the new token and `CLOUDFLARE_ACCOUNT_ID` to your account ID (e.g. from the error URL: `616291b90aac151bcc9ab892b58a951c`). Retry deployment. |
 | 404 on `/` | Ensure `_redirects` is in the same directory as `sunset-net-cursor.html` and that you didn’t set “Build output directory” to a subfolder that doesn’t contain `_redirects`. |
 | Form fails (Git deploy) | Check **Settings** → **Environment variables** (SUPABASE_*, RESEND_*). Check **Deployments** → **View build** and **View function logs** for errors. |
-| Build “failed” (Git) | If build command is empty and output is `.` or one space, build should succeed. If you added a build step, run it locally first and fix any errors. |
+| Build “failed” (Git) | For this repo, **Build command** must be empty and **Build output directory** must be `.`. Do not use “Wrangler” or any Workers preset. |
 
 ---
 

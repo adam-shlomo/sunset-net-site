@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safety Terms & Liability Policy — Sunset Net</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+
+/* ─── RESET & VARS ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --white:   #FAFAF8;
+  --paper:   #F5F3EE;
+  --ink:     #18181A;
+  --ink2:    #3A3A3C;
+  --muted:   #8A8A8E;
+  --border:  rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.13);
+  --accent:  #E8500A;
+  --green:   #1A8A3C;
+
+  --serif:  'DM Serif Display', Georgia, serif;
+  --sans:   'DM Sans', system-ui, sans-serif;
+  --mono:   'IBM Plex Mono', monospace;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+}
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Grain texture overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9000;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  background: rgba(250,250,248,0.88);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.logo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-btn {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 7px 18px;
+  background: var(--ink);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.nav-btn:hover {
+  background: var(--ink2);
+  transform: translateY(-1px);
+}
+
+/* ─── DOCUMENT LAYOUT ─── */
+.doc-shell {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 100px 24px 80px;
+}
+
+/* ─── BACK LINK ─── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  margin-bottom: 40px;
+  transition: color 0.15s;
+}
+
+.back-link:hover { color: var(--ink); }
+
+/* ─── DOCUMENT HEADER ─── */
+.doc-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 32px;
+  margin-bottom: 40px;
+}
+
+.doc-kicker {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.doc-kicker::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.doc-header h1 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.doc-header h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.doc-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.doc-meta strong {
+  font-weight: 500;
+  color: var(--ink2);
+}
+
+/* ─── PREAMBLE ─── */
+.preamble {
+  padding: 20px 24px;
+  border-left: 3px solid var(--accent);
+  background: rgba(232,80,10,0.03);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 48px;
+  font-size: 0.88rem;
+  color: var(--ink2);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+.preamble strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ─── SECTIONS ─── */
+.legal-section {
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+.legal-section:last-of-type { border-bottom: none; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.legal-section h2 {
+  font-family: var(--serif);
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: var(--ink);
+}
+
+.legal-section p {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--ink2);
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+
+.legal-section p:last-child { margin-bottom: 0; }
+
+.legal-section p strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.legal-section code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: rgba(232,80,10,0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ─── ACKNOWLEDGMENT BLOCKS ─── */
+.ack {
+  margin: 18px 0;
+  padding: 16px 20px;
+  border: 1px solid rgba(26,138,60,0.18);
+  background: rgba(26,138,60,0.03);
+  border-radius: 8px;
+  border-left: 3px solid var(--green);
+}
+
+.ack-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.ack p {
+  font-size: 0.82rem;
+  color: var(--ink2);
+  font-style: italic;
+  font-weight: 300;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* ─── CODE BLOCK ─── */
+.code-block {
+  margin: 18px 0;
+  padding: 20px 22px;
+  background: var(--ink);
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.code-block pre {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: #C8CDD8;
+  line-height: 1.7;
+  white-space: pre;
+}
+
+.code-block .k { color: #6B7394; }
+.code-block .s { color: #7dd3a8; }
+.code-block .b { color: #E8833A; }
+.code-block .n { color: #a5b0d0; }
+
+/* ─── ONBOARDING TABLE ─── */
+.onboarding-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 0.82rem;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.onboarding-table thead { background: var(--paper); }
+
+.onboarding-table th {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border2);
+}
+
+.onboarding-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--ink2);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.onboarding-table tr:last-child td { border-bottom: none; }
+
+.onboarding-table td:first-child {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  width: 48px;
+  font-weight: 500;
+}
+
+.onboarding-table em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.onboarding-table code {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink);
+  background: var(--paper);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-brand {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-copy {
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-links a:hover { color: var(--ink); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 780px) {
+  nav { padding: 0 20px; }
+  .doc-shell { padding: 80px 20px 60px; }
+  footer { flex-direction: column; gap: 16px; text-align: center; padding: 24px 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="/">
+    <div class="logo-dot"></div>
+    Sunset Net
+  </a>
+  <div class="nav-right">
+    <a class="nav-btn" href="/#access">Start Free Trial</a>
+  </div>
+</nav>
+
+<!-- DOCUMENT -->
+<div class="doc-shell">
+
+  <a href="/" class="back-link">← Back to Sunset Net</a>
+
+  <div class="doc-header">
+    <div class="doc-kicker">Legal Document</div>
+    <h1>Safety Terms &amp;<br><em>Liability Policy</em></h1>
+    <div class="doc-meta">
+      <div>Version: <strong>1.0</strong></div>
+      <div>Effective: <strong>February 2026</strong></div>
+      <div>Applies to: <strong>All Users</strong></div>
+    </div>
+  </div>
+
+  <div class="preamble">
+    <strong>Read this before you proceed.</strong> Sunset Net is an AI-powered decision-support tool for network engineers. Before accessing the platform, you must understand and accept the following terms. These are not boilerplate — they describe real constraints of LLM-generated configuration and real risks of applying changes to network infrastructure. By signing up and checking the acknowledgment box, you agree to everything on this page.
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="legal-section">
+    <div class="section-num">Safety Spec 01</div>
+    <h2>The Human-in-the-Loop Mandate</h2>
+    <p>
+      Sunset Net is a <strong>decision-support tool, not an autonomous network administrator.</strong> The system generates configuration proposals. It does not execute them without your explicit, deliberate approval — and that distinction is fundamental.
+    </p>
+    <p>
+      Every command surfaced by Sunset Net must be reviewed, verified, and manually approved by a qualified human operator before it is sent to any device. You are the proximate cause of any change applied to your infrastructure. Sunset Net is the instrument; you are the operator.
+    </p>
+    <div class="ack">
+      <div class="ack-label">Your Acknowledgment</div>
+      <p>I understand that Sunset Net is a decision-support tool, not an autonomous administrator. I am responsible for reviewing, verifying, and manually approving every command before it is executed on any device.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="legal-section">
+    <div class="section-num">Safety Spec 02</div>
+    <h2>No Warranty of Accuracy — The Hallucination Clause</h2>
+    <p>
+      Sunset Net uses Large Language Models (LLMs) — specifically Anthropic's Claude — to generate network configuration syntax. <strong>LLMs can and do produce incorrect, non-existent, deprecated, or destructive commands.</strong> This is a known and documented limitation of the technology, not a bug unique to this product.
+    </p>
+    <p>
+      Generated configuration may contain syntax that is invalid for your specific platform, firmware version, or topology. It may reference interfaces, route-maps, or policy objects that do not exist in your environment. It may achieve an output that differs from your stated intent.
+    </p>
+    <p>
+      Sunset Net does not guarantee that any generated output will: compile without errors, apply successfully, produce the intended network state, or be free of side effects on adjacent protocols or devices.
+    </p>
+    <div class="ack">
+      <div class="ack-label">Your Acknowledgment</div>
+      <p>I acknowledge that Large Language Models can generate incorrect, non-existent, or destructive syntax. Sunset Net does not guarantee that the generated configuration will achieve the intended result or be compatible with my specific firmware version, platform, or topology.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="legal-section">
+    <div class="section-num">Safety Spec 03</div>
+    <h2>Lab &amp; Non-Production Use Only</h2>
+    <p>
+      Sunset Net is currently scoped for use in <strong>lab, development, and non-production environments</strong> — including GNS3, EVE-NG, VIRL/CML, and dedicated test infrastructure. This is not a contractual courtesy; it is a technical reality.
+    </p>
+    <p>
+      The Safety Engine has been validated in controlled lab environments. It has not been subjected to the full range of edge cases, platform-specific quirks, and failure modes present in live production networks. Applying AI-generated configuration to production infrastructure is outside the intended use of this product.
+    </p>
+    <p>
+      If you choose to use Sunset Net on production infrastructure, you do so entirely at your own risk. <strong>Sunset Net assumes no liability for production outages, packet loss, routing instability, hardware damage, or service degradation</strong> resulting from such use.
+    </p>
+    <div class="ack">
+      <div class="ack-label">Your Acknowledgment</div>
+      <p>I agree to use Sunset Net only in lab, development, or non-production environments (e.g., GNS3, EVE-NG). I assume all risk if I choose to apply this tool to production infrastructure.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="legal-section">
+    <div class="section-num">Safety Spec 04</div>
+    <h2>Limitation of Liability</h2>
+    <p>
+      To the maximum extent permitted by applicable law, <strong>Sunset Net's total aggregate liability</strong> to you or any third party for any claims arising out of or related to your use of the platform — including network outages, data loss, configuration errors, hardware damage, service disruption, or business interruption — shall be limited as follows:
+    </p>
+    <p>
+      For users on the free trial: <strong>$0 USD.</strong> Sunset Net is provided free of charge during the trial period. No consideration has been exchanged. Accordingly, no damages are recoverable.
+    </p>
+    <p>
+      In no event shall Sunset Net, its founders, employees, or affiliates be liable for indirect, incidental, special, consequential, or punitive damages, including loss of revenue, loss of data, or cost of cover, even if advised of the possibility of such damages.
+    </p>
+    <div class="ack">
+      <div class="ack-label">Your Acknowledgment</div>
+      <p>To the maximum extent permitted by law, Sunset Net's total liability for any network outage, data loss, or hardware damage arising from my use of the platform is limited to $0 for free-trial users. I waive all claims beyond this amount.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="legal-section">
+    <div class="section-num">Safety Spec 05</div>
+    <h2>Third-Party Data Transmission — Privacy</h2>
+    <p>
+      Sunset Net processes your natural-language prompts and the outputs of <code>show</code> commands by sending them to <strong>Anthropic's Claude API</strong> for inference. This means your configuration metadata — including device prompts, topology descriptions, routing intent, and show command output — <strong>leaves your local environment and is transmitted to Anthropic's servers.</strong>
+    </p>
+    <p>
+      Anthropic's data handling is governed by their API usage policies and privacy documentation, which you should review independently. Sunset Net does not control how Anthropic stores, processes, or retains data submitted via their API.
+    </p>
+    <p>
+      <strong>You are solely responsible for ensuring that no sensitive personally identifiable information (PII), unencrypted credentials, authentication tokens, SNMP community strings, or proprietary customer data is included in any prompt or show command output submitted to the platform.</strong>
+    </p>
+    <div class="ack">
+      <div class="ack-label">Your Acknowledgment</div>
+      <p>I understand that my configuration metadata — including prompts and show command outputs — will be transmitted to third-party AI providers (Anthropic) for processing. I am responsible for ensuring no sensitive PII, credentials, or regulated data is submitted.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="legal-section">
+    <div class="section-num">Safety Spec 06</div>
+    <h2>Audit Log &amp; Consent Record</h2>
+    <p>
+      Every approval action taken within Sunset Net is recorded in a tamper-evident audit log. When you click <strong>Approve</strong> on a generated configuration, the following event is written:
+    </p>
+    <div class="code-block">
+      <pre><span class="k">{</span>
+  <span class="s">"timestamp"</span><span class="k">:</span>    <span class="n">"2026-02-19T14:22:37Z"</span><span class="k">,</span>
+  <span class="s">"user_id"</span><span class="k">:</span>      <span class="n">"eng_01"</span><span class="k">,</span>
+  <span class="s">"device"</span><span class="k">:</span>       <span class="n">"core-router-01"</span><span class="k">,</span>
+  <span class="s">"command"</span><span class="k">:</span>      <span class="n">"router ospf 1 / router-id 10.0.0.1 / ..."</span><span class="k">,</span>
+  <span class="s">"approved"</span><span class="k">:</span>     <span class="b">true</span><span class="k">,</span>
+  <span class="s">"safety_mode"</span><span class="k">:</span>  <span class="n">"interactive"</span><span class="k">,</span>
+  <span class="s">"snapshot_id"</span><span class="k">:</span>  <span class="n">"snap_20260219_142237"</span>
+<span class="k">}</span></pre>
+    </div>
+    <p>
+      This log constitutes a record of your informed consent to each individual command. In the event of a dispute, Sunset Net reserves the right to present audit log evidence demonstrating that you personally reviewed and approved each configuration change at a specific date and time.
+    </p>
+    <p>
+      <strong>By using the platform, you consent to the creation and retention of these audit records.</strong>
+    </p>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="legal-section">
+    <div class="section-num">Safety Spec 07</div>
+    <h2>In-App Safety Onboarding Sequence</h2>
+    <p>
+      On first launch of the Sunset Net application, you will be required to complete the following Safety Check before accessing any functionality. This is not optional and cannot be bypassed.
+    </p>
+    <table class="onboarding-table">
+      <thead>
+        <tr>
+          <th>Step</th>
+          <th>Action Required</th>
+          <th>Legal Effect</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td><em>"I am the human-in-the-loop. I will review every command."</em></td>
+          <td>Confirms acceptance of HITL mandate and proximate-cause doctrine.</td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td><em>"I understand that LLMs can produce incorrect or destructive syntax."</em></td>
+          <td>Confirms awareness of hallucination risk and waiver of accuracy warranty.</td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td><em>"I am using this tool in a lab or non-production environment."</em></td>
+          <td>Confirms scope-of-use agreement and assumption of production risk.</td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td><code>ACTIVATE SAFETYGUARD</code></td>
+          <td>Activates audit logging, snapshot system, and approval workflow. Session begins.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="legal-section">
+    <div class="section-num">General Terms</div>
+    <h2>Governing Law, Modifications &amp; Severability</h2>
+    <p>
+      These terms are governed by applicable law in the jurisdiction where Sunset Net operates. Sunset Net reserves the right to update these terms at any time. Continued use of the platform following notice of updates constitutes acceptance of the revised terms.
+    </p>
+    <p>
+      If any provision of these terms is found to be unenforceable by a court of competent jurisdiction, the remaining provisions will continue in full force and effect.
+    </p>
+    <p>
+      These terms represent the entire agreement between you and Sunset Net with respect to liability, safety, and use of the platform, and supersede all prior understandings.
+    </p>
+    <p style="margin-top:16px;font-size:0.8rem;color:var(--muted);font-style:italic;">
+      Note: This document is provided for informational purposes. It does not constitute legal advice. Sunset Net recommends consulting qualified legal counsel before deploying AI-powered tooling in regulated or enterprise environments.
+    </p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="footer-brand">
+      <div class="logo-dot"></div>
+      Sunset Net
+    </div>
+    <span class="footer-copy">© 2026</span>
+  </div>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="#">Documentation</a></li>
+    <li><a href="#">GitHub</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+(function(){try{fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:location.pathname,referrer:document.referrer||null}),keepalive:true});}catch(_){}})();
+</script>
+
+</body>
+</html>

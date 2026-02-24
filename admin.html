@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Sunset Net — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --white:   #FAFAF8;
+  --paper:   #F5F3EE;
+  --ink:     #18181A;
+  --ink2:    #3A3A3C;
+  --muted:   #8A8A8E;
+  --border:  rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.13);
+  --accent:  #E8500A;
+  --green:   #1A8A3C;
+
+  --serif:  'DM Serif Display', Georgia, serif;
+  --sans:   'DM Sans', system-ui, sans-serif;
+  --mono:   'IBM Plex Mono', monospace;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+}
+
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── NAV ─── */
+.admin-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 52px;
+  border-bottom: 1px solid var(--border);
+  background: var(--white);
+}
+
+.admin-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+}
+
+.logo-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.nav-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border2);
+  margin: 0 4px;
+}
+
+.nav-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.sign-out-btn {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sign-out-btn:hover {
+  color: var(--ink);
+  border-color: rgba(0,0,0,0.2);
+}
+
+/* ─── LOGIN ─── */
+.login-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-box {
+  width: 360px;
+  text-align: center;
+}
+
+.login-title {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+
+.login-input {
+  width: 100%;
+  background: var(--white);
+  border: 1px solid var(--border2);
+  border-radius: 7px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 10px;
+}
+
+.login-input:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(24,24,26,0.07);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.login-btn:hover { background: #000; }
+.login-btn:disabled { opacity: 0.4; cursor: wait; }
+
+.login-error {
+  display: none;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: rgba(255,95,86,0.08);
+  border: 1px solid rgba(255,95,86,0.25);
+  font-size: 0.8rem;
+  color: #c94208;
+}
+
+.login-error.show { display: block; }
+
+/* ─── DASHBOARD ─── */
+.dashboard {
+  display: none;
+}
+
+.dashboard.show {
+  display: block;
+}
+
+.dash-content {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 28px 32px 60px;
+}
+
+/* Stats row */
+.stats-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  flex: 1;
+  padding: 16px 18px;
+  background: var(--white);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-value {
+  font-family: var(--mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-btn {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  background: var(--white);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover { color: var(--ink); border-color: rgba(0,0,0,0.2); }
+.filter-btn.active { background: var(--ink); color: var(--white); border-color: var(--ink); }
+
+.approve-btn {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 7px 18px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.approve-btn:hover:not(:disabled) { background: #157a32; }
+.approve-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Table */
+.table-wrap {
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+thead {
+  background: var(--paper);
+}
+
+th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border2);
+}
+
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink2);
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+
+tr:hover td { background: rgba(0,0,0,0.015); }
+
+td input[type="checkbox"],
+th input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--ink);
+  cursor: pointer;
+}
+
+.email-cell {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+}
+
+.stack-cell {
+  font-size: 0.78rem;
+}
+
+.priority-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: rgba(232,80,10,0.08);
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+
+.date-cell {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.status-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background: rgba(255,189,46,0.12);
+  color: #a67c00;
+}
+
+.status-approved {
+  background: rgba(26,138,60,0.1);
+  color: var(--green);
+}
+
+.status-invited {
+  background: rgba(26,138,60,0.18);
+  color: #0e6b27;
+}
+
+.empty-state {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* Confirm dialog */
+.dialog-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-overlay.show { display: flex; }
+
+.dialog-box {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 28px 32px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.dialog-title {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.dialog-body {
+  font-size: 0.85rem;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dialog-cancel {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  padding: 8px 16px;
+  background: none;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--ink2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dialog-cancel:hover { border-color: rgba(0,0,0,0.2); }
+
+.dialog-confirm {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 8px 18px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dialog-confirm:hover { background: #157a32; }
+.dialog-confirm:disabled { opacity: 0.4; cursor: wait; }
+
+/* Toast */
+.toast {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  z-index: 300;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.toast.show { display: block; animation: toast-in 0.3s ease; }
+.toast.success { background: var(--green); color: #fff; }
+.toast.error { background: #c94208; color: #fff; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ─── TABS ─── */
+.tab-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: 24px;
+}
+
+.tab-btn {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 400;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ─── ANALYTICS ─── */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.analytics-card {
+  padding: 18px 20px;
+  background: var(--white);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.analytics-card-title {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.analytics-card.full-width {
+  grid-column: 1 / -1;
+}
+
+.chart-container {
+  height: 160px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.chart-bar-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.chart-bar {
+  width: 100%;
+  background: var(--ink);
+  border-radius: 3px 3px 0 0;
+  min-height: 2px;
+  transition: height 0.3s ease;
+  position: relative;
+}
+
+.chart-bar:hover { opacity: 0.75; }
+
+.chart-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  max-height: 40px;
+  overflow: hidden;
+}
+
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+
+.list-row:last-child { border-bottom: none; }
+
+.list-name {
+  color: var(--ink2);
+  font-weight: 300;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 70%;
+}
+
+.list-count {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.analytics-empty {
+  color: var(--muted);
+  font-size: 0.82rem;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.period-select {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  background: var(--white);
+  color: var(--ink2);
+  cursor: pointer;
+  outline: none;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .stats-row { flex-wrap: wrap; }
+  .stat-card { min-width: calc(50% - 8px); }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .table-wrap { overflow-x: auto; }
+  table { min-width: 640px; }
+  .dash-content { padding: 20px 16px 40px; }
+  .admin-nav { padding: 0 16px; }
+  .analytics-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ─── LOGIN GATE ─── -->
+<div id="login-view" class="login-wrap">
+  <div class="login-box">
+    <div style="margin-bottom:20px;">
+      <span class="logo-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);"></span>
+    </div>
+    <div class="login-title">Admin</div>
+    <div class="login-sub">Enter your admin secret to continue.</div>
+    <input class="login-input" id="login-password" type="password" placeholder="ADMIN_SECRET" autocomplete="off" autofocus>
+    <button class="login-btn" id="login-btn" onclick="attemptLogin()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ─── DASHBOARD ─── -->
+<div id="dashboard-view" class="dashboard">
+  <nav class="admin-nav">
+    <div class="admin-nav-left">
+      <a class="nav-logo" href="/">
+        <div class="logo-dot"></div>
+        Sunset Net
+      </a>
+      <div class="nav-divider"></div>
+      <span class="nav-label">Admin</span>
+    </div>
+    <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+  </nav>
+
+  <div class="dash-content">
+
+    <!-- Tabs -->
+    <div class="tab-row">
+      <button class="tab-btn active" onclick="switchTab('signups', this)">Signups</button>
+      <button class="tab-btn" onclick="switchTab('analytics', this)">Analytics</button>
+    </div>
+
+    <!-- ─── SIGNUPS TAB ─── -->
+    <div class="tab-panel active" id="tab-signups">
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">—</div>
+        <div class="stat-label">Total signups</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-pending">—</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-approved">—</div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-invited">—</div>
+        <div class="stat-label">Invited</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" data-filter="pending" onclick="setFilter('pending', this)">Pending</button>
+        <button class="filter-btn" data-filter="approved" onclick="setFilter('approved', this)">Approved</button>
+        <button class="filter-btn" data-filter="invited" onclick="setFilter('invited', this)">Invited</button>
+      </div>
+      <button class="approve-btn" id="approve-btn" disabled onclick="showConfirmDialog()">Approve &amp; Send Invite</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:36px"><input type="checkbox" id="select-all" onchange="toggleSelectAll()"></th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Stack</th>
+            <th>Priority</th>
+            <th>Signed up</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="signups-tbody"></tbody>
+      </table>
+      <div class="empty-state" id="empty-state" style="display:none;">No signups to show.</div>
+    </div>
+
+    </div><!-- /tab-signups -->
+
+    <!-- ─── ANALYTICS TAB ─── -->
+    <div class="tab-panel" id="tab-analytics">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <div class="stats-row" style="flex:1;margin-bottom:0;">
+          <div class="stat-card">
+            <div class="stat-value" id="a-total">—</div>
+            <div class="stat-label">Page views</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="a-today">—</div>
+            <div class="stat-label">Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="a-yesterday">—</div>
+            <div class="stat-label">Yesterday</div>
+          </div>
+        </div>
+        <select class="period-select" id="period-select" onchange="loadAnalytics()" style="margin-left:12px;">
+          <option value="7">7 days</option>
+          <option value="30" selected>30 days</option>
+          <option value="90">90 days</option>
+        </select>
+      </div>
+
+      <div class="analytics-grid">
+        <!-- Daily views chart -->
+        <div class="analytics-card full-width">
+          <div class="analytics-card-title">Daily views</div>
+          <div class="chart-container" id="daily-chart"></div>
+        </div>
+
+        <!-- Top pages -->
+        <div class="analytics-card">
+          <div class="analytics-card-title">Top pages</div>
+          <div id="top-pages"></div>
+        </div>
+
+        <!-- Top countries -->
+        <div class="analytics-card">
+          <div class="analytics-card-title">Top countries</div>
+          <div id="top-countries"></div>
+        </div>
+
+        <!-- Top referrers -->
+        <div class="analytics-card">
+          <div class="analytics-card-title">Top referrers</div>
+          <div id="top-referrers"></div>
+        </div>
+
+        <!-- Devices -->
+        <div class="analytics-card">
+          <div class="analytics-card-title">Devices</div>
+          <div id="devices"></div>
+        </div>
+      </div>
+
+    </div><!-- /tab-analytics -->
+
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div class="dialog-overlay" id="confirm-dialog">
+  <div class="dialog-box">
+    <div class="dialog-title">Approve &amp; Send Invite</div>
+    <div class="dialog-body" id="dialog-body">
+      Are you sure you want to approve <strong id="dialog-count">0</strong> signup(s) and send invite emails?
+    </div>
+    <div class="dialog-actions">
+      <button class="dialog-cancel" onclick="hideConfirmDialog()">Cancel</button>
+      <button class="dialog-confirm" id="dialog-confirm-btn" onclick="executeApproval()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+var allSignups = [];
+var currentFilter = 'all';
+var secret = '';
+var failedAttempts = 0;
+var lockedUntil = 0;
+
+// ─── LOGIN ───
+
+document.getElementById('login-password').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') attemptLogin();
+});
+
+function attemptLogin() {
+  var input = document.getElementById('login-password');
+  var errorEl = document.getElementById('login-error');
+  var btn = document.getElementById('login-btn');
+  var pw = input.value.trim();
+
+  if (!pw) return;
+
+  // Exponential lockout: 0, 2s, 5s, 15s, 30s, 60s...
+  var now = Date.now();
+  if (now < lockedUntil) {
+    var secs = Math.ceil((lockedUntil - now) / 1000);
+    errorEl.textContent = 'Too many attempts. Try again in ' + secs + 's.';
+    errorEl.classList.add('show');
+    return;
+  }
+
+  errorEl.classList.remove('show');
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+
+  fetch('/api/admin/signups', {
+    headers: { 'Authorization': 'Bearer ' + pw }
+  })
+    .then(function(res) {
+      return res.text().then(function(text) {
+        var data = null;
+        try { data = JSON.parse(text); } catch (_) {}
+        if (res.status === 429) {
+          var retry = res.headers.get('Retry-After') || '300';
+          lockedUntil = Date.now() + (parseInt(retry, 10) * 1000);
+          failedAttempts = 6; // max lockout
+          throw new Error((data && data.error) || 'Too many attempts. Try again later.');
+        }
+        if (res.status === 401) {
+          throw new Error('Invalid secret');
+        }
+        if (!res.ok) {
+          var msg = (data && data.error) || 'Server error (' + res.status + ')';
+          throw new Error(msg);
+        }
+        return data;
+      });
+    })
+    .then(function(data) {
+      failedAttempts = 0;
+      lockedUntil = 0;
+      secret = pw;
+      sessionStorage.setItem('_admin_s', pw);
+      allSignups = (data && data.signups) || [];
+      showDashboard();
+    })
+    .catch(function(err) {
+      failedAttempts++;
+      // Lockout: 2s, 5s, 15s, 30s, 60s, then stays at 60s
+      var delays = [0, 2, 5, 15, 30, 60];
+      var delaySec = delays[Math.min(failedAttempts, delays.length - 1)];
+      lockedUntil = Date.now() + (delaySec * 1000);
+
+      var msg = err.message || 'Authentication failed';
+      if (delaySec > 0) {
+        msg += '. Locked for ' + delaySec + 's.';
+      }
+      errorEl.textContent = msg;
+      errorEl.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+    });
+}
+
+// Auto-login from sessionStorage
+(function() {
+  var saved = sessionStorage.getItem('_admin_s');
+  if (saved) {
+    // Hide login immediately so it doesn't flash
+    document.getElementById('login-view').style.display = 'none';
+    secret = saved;
+
+    fetch('/api/admin/signups', {
+      headers: { 'Authorization': 'Bearer ' + saved }
+    })
+      .then(function(res) {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(function(data) {
+        allSignups = data.signups || [];
+        showDashboard();
+      })
+      .catch(function() {
+        sessionStorage.removeItem('_admin_s');
+        secret = '';
+        // Show login again if session is invalid
+        document.getElementById('login-view').style.display = '';
+      });
+  }
+})();
+
+function signOut() {
+  sessionStorage.removeItem('_admin_s');
+  secret = '';
+  allSignups = [];
+  document.getElementById('dashboard-view').classList.remove('show');
+  document.getElementById('login-view').style.display = '';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-btn').disabled = false;
+  document.getElementById('login-btn').textContent = 'Sign In';
+  document.getElementById('login-error').classList.remove('show');
+}
+
+// ─── DASHBOARD ───
+
+function showDashboard() {
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('dashboard-view').classList.add('show');
+  renderStats();
+  renderTable();
+}
+
+function getStatus(signup) {
+  if (signup.invite_sent_at) return 'invited';
+  if (signup.approved_at) return 'approved';
+  return 'pending';
+}
+
+function renderStats() {
+  var total = allSignups.length;
+  var pending = 0, approved = 0, invited = 0;
+  for (var i = 0; i < allSignups.length; i++) {
+    var s = getStatus(allSignups[i]);
+    if (s === 'pending') pending++;
+    else if (s === 'approved') approved++;
+    else if (s === 'invited') invited++;
+  }
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-approved').textContent = approved;
+  document.getElementById('stat-invited').textContent = invited;
+}
+
+function filteredSignups() {
+  if (currentFilter === 'all') return allSignups;
+  return allSignups.filter(function(s) { return getStatus(s) === currentFilter; });
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  var btns = document.querySelectorAll('.filter-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+  btn.classList.add('active');
+  renderTable();
+}
+
+function formatDate(iso) {
+  if (!iso) return '—';
+  var d = new Date(iso);
+  var month = d.toLocaleString('en-US', { month: 'short' });
+  var day = d.getDate();
+  var year = d.getFullYear();
+  var h = d.getHours();
+  var m = String(d.getMinutes()).padStart(2, '0');
+  return month + ' ' + day + ', ' + year + ' ' + h + ':' + m;
+}
+
+function renderTable() {
+  var tbody = document.getElementById('signups-tbody');
+  var emptyEl = document.getElementById('empty-state');
+  var list = filteredSignups();
+
+  document.getElementById('select-all').checked = false;
+  updateApproveBtn();
+
+  if (list.length === 0) {
+    tbody.innerHTML = '';
+    emptyEl.style.display = '';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var s = list[i];
+    var status = getStatus(s);
+    var statusClass = 'status-' + status;
+    var statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+
+    html += '<tr data-id="' + s.id + '">';
+    html += '<td><input type="checkbox" class="row-check" data-id="' + s.id + '" onchange="updateApproveBtn()"></td>';
+    html += '<td class="email-cell">' + escapeHtml(s.email) + '</td>';
+    html += '<td>' + escapeHtml(s.name || '—') + '</td>';
+    html += '<td class="stack-cell">' + escapeHtml(s.primary_stack || '—') + '</td>';
+    html += '<td>' + (s.priority_lab ? '<span class="priority-badge">LAB</span>' : '—') + '</td>';
+    html += '<td class="date-cell">' + formatDate(s.created_at) + '</td>';
+    html += '<td><span class="status-badge ' + statusClass + '">' + statusLabel + '</span></td>';
+    html += '</tr>';
+  }
+
+  tbody.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function toggleSelectAll() {
+  var checked = document.getElementById('select-all').checked;
+  var boxes = document.querySelectorAll('.row-check');
+  for (var i = 0; i < boxes.length; i++) {
+    boxes[i].checked = checked;
+  }
+  updateApproveBtn();
+}
+
+function getSelectedIds() {
+  var ids = [];
+  var boxes = document.querySelectorAll('.row-check:checked');
+  for (var i = 0; i < boxes.length; i++) {
+    ids.push(boxes[i].getAttribute('data-id'));
+  }
+  return ids;
+}
+
+function updateApproveBtn() {
+  var ids = getSelectedIds();
+  var btn = document.getElementById('approve-btn');
+  btn.disabled = ids.length === 0;
+  btn.textContent = ids.length > 0
+    ? 'Approve & Send Invite (' + ids.length + ')'
+    : 'Approve & Send Invite';
+}
+
+// ─── CONFIRM DIALOG ───
+
+function showConfirmDialog() {
+  var ids = getSelectedIds();
+  if (ids.length === 0) return;
+  document.getElementById('dialog-count').textContent = ids.length;
+  document.getElementById('confirm-dialog').classList.add('show');
+  document.getElementById('dialog-confirm-btn').disabled = false;
+}
+
+function hideConfirmDialog() {
+  document.getElementById('confirm-dialog').classList.remove('show');
+}
+
+function executeApproval() {
+  var ids = getSelectedIds();
+  if (ids.length === 0) return;
+
+  var confirmBtn = document.getElementById('dialog-confirm-btn');
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = 'Sending...';
+
+  fetch('/api/admin/approve', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + secret
+    },
+    body: JSON.stringify({ ids: ids })
+  })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Server error (' + res.status + ')');
+      return res.json();
+    })
+    .then(function(data) {
+      hideConfirmDialog();
+      confirmBtn.textContent = 'Confirm';
+
+      var results = data.results || [];
+      var approved = 0, errors = 0;
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].error) errors++;
+        else approved++;
+      }
+
+      if (errors > 0 && approved > 0) {
+        showToast(approved + ' approved, ' + errors + ' error(s)', 'error');
+      } else if (errors > 0) {
+        showToast('Failed: ' + (results[0] && results[0].error || 'Unknown error'), 'error');
+      } else {
+        showToast(approved + ' signup(s) approved & invited', 'success');
+      }
+
+      // Refresh data
+      refreshSignups();
+    })
+    .catch(function(err) {
+      hideConfirmDialog();
+      confirmBtn.textContent = 'Confirm';
+      showToast(err.message || 'Approval failed', 'error');
+    });
+}
+
+function refreshSignups() {
+  fetch('/api/admin/signups', {
+    headers: { 'Authorization': 'Bearer ' + secret }
+  })
+    .then(function(res) {
+      if (!res.ok) throw new Error();
+      return res.json();
+    })
+    .then(function(data) {
+      allSignups = data.signups || [];
+      renderStats();
+      renderTable();
+    })
+    .catch(function() {
+      // silent fail on refresh
+    });
+}
+
+// ─── TOAST ───
+
+var toastTimer;
+
+function showToast(msg, type) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + (type || 'success');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() {
+    el.classList.remove('show');
+  }, 4000);
+}
+
+// ─── TABS ───
+
+var analyticsLoaded = false;
+
+function switchTab(tab, btn) {
+  var tabs = document.querySelectorAll('.tab-btn');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+  btn.classList.add('active');
+
+  document.getElementById('tab-signups').classList.remove('active');
+  document.getElementById('tab-analytics').classList.remove('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+
+  if (tab === 'analytics' && !analyticsLoaded) {
+    loadAnalytics();
+  }
+}
+
+// ─── ANALYTICS ───
+
+var analyticsData = null;
+
+function loadAnalytics() {
+  var days = document.getElementById('period-select').value || '30';
+
+  fetch('/api/admin/analytics?days=' + days, {
+    headers: { 'Authorization': 'Bearer ' + secret }
+  })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Failed to load analytics');
+      return res.json();
+    })
+    .then(function(data) {
+      analyticsData = data;
+      analyticsLoaded = true;
+      renderAnalytics(data);
+    })
+    .catch(function(err) {
+      document.getElementById('daily-chart').innerHTML = '<div class="analytics-empty">' + escapeHtml(err.message) + '</div>';
+    });
+}
+
+function renderAnalytics(data) {
+  // Stats
+  document.getElementById('a-total').textContent = data.total_views || 0;
+  document.getElementById('a-today').textContent = data.today_views || 0;
+  document.getElementById('a-yesterday').textContent = data.yesterday_views || 0;
+
+  // Daily chart
+  renderDailyChart(data.daily || []);
+
+  // Lists
+  renderList('top-pages', data.top_pages || []);
+  renderList('top-countries', data.top_countries || [], true);
+  renderList('top-referrers', data.top_referrers || []);
+  renderList('devices', data.devices || []);
+}
+
+function renderDailyChart(daily) {
+  var container = document.getElementById('daily-chart');
+  if (!daily.length) {
+    container.innerHTML = '<div class="analytics-empty">No data yet</div>';
+    return;
+  }
+
+  var maxViews = 1;
+  for (var i = 0; i < daily.length; i++) {
+    if (daily[i].views > maxViews) maxViews = daily[i].views;
+  }
+
+  var html = '';
+  for (var j = 0; j < daily.length; j++) {
+    var d = daily[j];
+    var height = Math.max(2, (d.views / maxViews) * 140);
+    var label = d.date.slice(5); // MM-DD
+    var showLabel = daily.length <= 14 || j % Math.ceil(daily.length / 14) === 0;
+
+    html += '<div class="chart-bar-wrap" title="' + d.date + ': ' + d.views + ' views">';
+    html += '<div class="chart-bar" style="height:' + height + 'px"></div>';
+    if (showLabel) {
+      html += '<div class="chart-label">' + label + '</div>';
+    }
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+var countryNames = {
+  US:'United States',GB:'United Kingdom',DE:'Germany',FR:'France',CA:'Canada',
+  AU:'Australia',NL:'Netherlands',JP:'Japan',IN:'India',BR:'Brazil',
+  SE:'Sweden',NO:'Norway',DK:'Denmark',FI:'Finland',IT:'Italy',
+  ES:'Spain',CH:'Switzerland',AT:'Austria',BE:'Belgium',PL:'Poland',
+  IL:'Israel',SG:'Singapore',KR:'South Korea',MX:'Mexico',AR:'Argentina',
+  IE:'Ireland',NZ:'New Zealand',ZA:'South Africa',AE:'UAE',PT:'Portugal'
+};
+
+function renderList(elId, items, isCountry) {
+  var container = document.getElementById(elId);
+  if (!items.length) {
+    container.innerHTML = '<div class="analytics-empty">No data yet</div>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var name = items[i].name;
+    if (isCountry && countryNames[name]) {
+      name = countryNames[name] + ' (' + items[i].name + ')';
+    }
+    html += '<div class="list-row">';
+    html += '<span class="list-name">' + escapeHtml(name) + '</span>';
+    html += '<span class="list-count">' + items[i].count + '</span>';
+    html += '</div>';
+  }
+
+  container.innerHTML = html;
+}
+</script>
+
+</body>
+</html>

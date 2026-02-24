@@ -1,7 +1,7 @@
 /**
  * Cloudflare Pages Function: POST /api/signup
  * Same behavior as netlify/functions/signup.js
- * POST body: { email, primary_stack?, priority_lab?: boolean, terms_accepted?: boolean }
+ * POST body: { email, name?, terms_accepted?: boolean }
  * Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, CONFIRMATION_FROM_EMAIL, SITE_URL
  */
 
@@ -55,8 +55,7 @@ export async function onRequest(context) {
     return jsonResponse(400, { error: 'Valid work email is required' }, origin);
   }
 
-  const primary_stack = sanitize(body.primary_stack, 100);
-  const priority_lab = Boolean(body.priority_lab);
+  const name = sanitize(body.name, 100);
   const terms_accepted = Boolean(body.terms_accepted);
   if (!terms_accepted) {
     return jsonResponse(400, { error: 'You must accept the Safety Terms' }, origin);
@@ -73,8 +72,7 @@ export async function onRequest(context) {
 
   const row = {
     email: email.toLowerCase(),
-    primary_stack: primary_stack || null,
-    priority_lab,
+    name: name || null,
     terms_accepted_at: new Date().toISOString(),
   };
 
@@ -92,15 +90,15 @@ export async function onRequest(context) {
   if (!supabaseRes.ok) {
     const errText = await supabaseRes.text();
     if (supabaseRes.status === 409 || errText.includes('duplicate') || errText.includes('unique')) {
-      return jsonResponse(409, { error: 'This email is already on the list' }, origin);
+      return jsonResponse(409, { error: 'This email already has an account' }, origin);
     }
     return jsonResponse(500, { error: 'Could not save signup' }, origin);
   }
 
   if (RESEND_API_KEY) {
     const html = `
-      <p>You're on the list.</p>
-      <p>We'll send access details and the download link when your slot is ready. In the meantime — keep building.</p>
+      <p>Welcome to Sunset Net.</p>
+      <p>Your free trial is ready. Log in to get started.</p>
       <p>— Sunset Net</p>
     `;
     try {
@@ -113,7 +111,7 @@ export async function onRequest(context) {
         body: JSON.stringify({
           from: CONFIRMATION_FROM_EMAIL,
           to: [email],
-          subject: "You're on the Sunset Net alpha list",
+          subject: 'Welcome to Sunset Net',
           html: html.trim(),
         }),
       });
@@ -126,5 +124,5 @@ export async function onRequest(context) {
     }
   }
 
-  return jsonResponse(201, { ok: true, message: "You're on the list." }, origin);
+  return jsonResponse(201, { ok: true, message: 'Account created.' }, origin);
 }
