@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /api/
 
-Sitemap: https://sunset-net.pages.dev/sitemap.xml
+Sitemap: https://sunsetautomations.com/sitemap.xml

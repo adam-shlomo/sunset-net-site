@@ -25,16 +25,16 @@ Sunset Net is a decision-support tool that lets network engineers describe what 
 
 Try Sunset Net free for 30 days. No credit card required.
 
-- URL: https://sunset-net.pages.dev/
-- Signup: https://sunset-net.pages.dev/#access
+- URL: https://sunsetautomations.com/
+- Signup: https://sunsetautomations.com/#access
 
 ## Important Safety Information
 
 - Sunset Net is a decision-support tool, not an autonomous network administrator
 - AI-generated configuration may contain errors — all output must be human-reviewed
 - Currently scoped for lab, development, and non-production environments
-- Full safety terms: https://sunset-net.pages.dev/safety-terms.html
+- Full safety terms: https://sunsetautomations.com/safety-terms.html
 
 ## Contact
 
-- Website: https://sunset-net.pages.dev/
+- Website: https://sunsetautomations.com/
