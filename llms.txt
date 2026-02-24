@@ -1,0 +1,40 @@
+# Sunset Net
+
+> The AI orchestrator for network engineers.
+
+Sunset Net is a decision-support tool that lets network engineers describe what they want their network to do in plain English. It generates vendor-specific configuration, cross-checks topology for conflicts, and surfaces a diff for human review — before any changes are applied.
+
+## Key Features
+
+- Natural-language to network configuration (Cisco IOS, IOS-XE, IOS-XR, JunOS, Nokia SR-OS)
+- Human-in-the-loop approval workflow — no changes without explicit operator consent
+- Topology-aware conflict detection
+- Rollback snapshots before every change
+- Tamper-evident audit log of all approvals
+- SafetyGuard system with mandatory safety onboarding
+
+## How It Works
+
+1. Connect to your lab devices via SSH
+2. Describe your intent in plain English (e.g., "configure OSPF area 0 on all lab devices")
+3. Sunset Net generates vendor-specific configuration using AI (Anthropic Claude)
+4. Review the generated config and approve or deny
+5. Changes are applied only after explicit human approval
+
+## Free Trial
+
+Try Sunset Net free for 30 days. No credit card required.
+
+- URL: https://sunset-net.pages.dev/
+- Signup: https://sunset-net.pages.dev/#access
+
+## Important Safety Information
+
+- Sunset Net is a decision-support tool, not an autonomous network administrator
+- AI-generated configuration may contain errors — all output must be human-reviewed
+- Currently scoped for lab, development, and non-production environments
+- Full safety terms: https://sunset-net.pages.dev/safety-terms.html
+
+## Contact
+
+- Website: https://sunset-net.pages.dev/
