@@ -67,7 +67,8 @@ export async function onRequest(context) {
   const CONFIRMATION_FROM_EMAIL = env.CONFIRMATION_FROM_EMAIL || 'Sunset Net <onboarding@resend.dev>';
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    return jsonResponse(500, { error: 'Server configuration error' }, origin);
+    console.error('Missing env vars:', { hasUrl: !!SUPABASE_URL, hasKey: !!SUPABASE_SERVICE_ROLE_KEY });
+    return jsonResponse(500, { error: 'Server configuration error: missing environment variables' }, origin);
   }
 
   const row = {
@@ -92,7 +93,8 @@ export async function onRequest(context) {
     if (supabaseRes.status === 409 || errText.includes('duplicate') || errText.includes('unique')) {
       return jsonResponse(409, { error: 'This email already has an account' }, origin);
     }
-    return jsonResponse(500, { error: 'Could not save signup' }, origin);
+    console.error('Supabase error', supabaseRes.status, errText);
+    return jsonResponse(500, { error: 'Could not save signup: ' + errText.slice(0, 200) }, origin);
   }
 
   if (RESEND_API_KEY) {
