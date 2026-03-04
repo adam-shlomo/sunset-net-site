@@ -50,3 +50,38 @@ create index if not exists page_views_path_idx on public.page_views (path);
 alter table public.page_views enable row level security;
 
 comment on table public.page_views is 'Lightweight page view tracking. No IPs or PII stored.';
+
+-- ─── LICENSE KEYS (security hardening) ────────────────────────────────────────
+-- Supabase warning remediation:
+-- "RLS Disabled in Public" on public.license_keys
+--
+-- Safe default for this project: backend-only access via service_role.
+-- This keeps anon/authenticated API clients blocked unless you later add
+-- explicit user/tenant policies.
+
+alter table if exists public.license_keys enable row level security;
+
+do $$
+begin
+  if to_regclass('public.license_keys') is null then
+    raise notice 'public.license_keys does not exist; skipping policy creation.';
+    return;
+  end if;
+
+  if not exists (
+    select 1
+    from pg_policies
+    where schemaname = 'public'
+      and tablename = 'license_keys'
+      and policyname = 'license_keys_service_role_all'
+  ) then
+    execute 'create policy "license_keys_service_role_all" on public.license_keys
+      for all
+      to service_role
+      using (true)
+      with check (true)';
+  end if;
+end $$;
+
+comment on table public.license_keys is
+  'License keys table. RLS enabled; default access is backend-only (service_role).';
